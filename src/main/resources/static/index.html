@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery.json.min.js"></script>
+
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+<script src="js/bootstrap.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        function lF() {
+
+            function checkStatus(response) {
+                $('#bFLogOut').unbind('click');
+                $('#bFLogIn').unbind('click');
+
+                if (response.status == "connected") {
+                    $('#lF').show();
+                    $('#uF').html(response.authResponse.userID);
+
+                    $('#bFLogIn').hide();
+                    $('#bFLogOut').show();
+                    $('#bFLogOut').click(function() {
+                        window.FB.logout(function(response) {
+                            checkStatus(response);
+                        });
+                    });
+
+                } else {
+                    $('#lF').hide();
+                    $('#uF').html('');
+
+                    $('#bFLogOut').hide();
+                    $('#bFLogIn').show();
+                    $('#bFLogIn').click(function() {
+                        window.FB.login(function(response) {
+                            checkStatus(response);
+                          }, { scope: 'public_profile,email' });
+                    });
+                }
+            }
+
+            window.fbAsyncInit = function() {
+                window.setTimeout(function() {
+                    window.FB.init({
+                        appId : '499960956823902',
+                        cookie : true,
+                        xfbml : true,
+                        version : 'v2.2'
+                    });
+                    window.FB.getLoginStatus(function(response) {
+                        checkStatus(response);
+                    });
+
+                    lFSuccess();
+
+                }, 0);
+            }
+
+            window.setTimeout(function() {
+                // Load the SDK asynchronously
+                (function(d, s, id) {
+                    var js, fjs = d.getElementsByTagName(s)[0];
+                    if (d.getElementById(id)) {
+                        return;
+                    }
+                    js = d.createElement(s);
+                    js.id = id;
+                    js.src = "//connect.facebook.net/en_US/sdk.js";
+                    fjs.parentNode.insertBefore(js, fjs);
+                } (document, 'script', 'facebook-jssdk'));
+            }, 0);
+
+        }
+
+        function lFSuccess() {
+            $('#p0').parent().children().hide();
+            $('#pF').show();
+        }
+
+        function lFExport() {
+            $('#p0').parent().children().hide();
+            $('#pF').show();
+        }
+    </script>
+
+    <header class="bs-docs-nav navbar navbar-static-top" id="top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="../" class="navbar-brand">CRM Bridge</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div id="p0" class="panel panel-default">
+            <div class="panel-body text-center">
+                <div class="well center-block" style="max-width: 400px">
+                    <p>
+                        <button class="btn btn-block btn-lg btn-primary" onclick="lF()">Sign in with Facebook</button>
+                    </p>
+                    <button class="btn btn-block btn-lg btn-info" onclick="lT()">Sign in with Twitter</button>
+                </div>
+            </div>
+        </div>
+        <div id="pF" class="panel panel-default" style="display: none;">
+            <div class="panel-heading">
+                Synchronization
+                <span id="lF" class="pull-right">UserId: <span id="uF"></span></span>
+            </div>
+            <div class="panel-body text-center">
+                <p>
+                    <button id="bFLogOut" class="btn btn-default btn-lg">Log Out</button>
+                </p>
+                <p>
+                    <button id="bFLogIn" class="btn btn-default btn-lg">Log In</button>
+                </p>
+                <button class="btn btn-default btn-lg" onclick="lFExport()">Export contact to CRM</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
