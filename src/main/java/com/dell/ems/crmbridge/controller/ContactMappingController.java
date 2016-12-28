@@ -19,33 +19,37 @@ import com.dell.ems.crmbridge.repository.ContactMappingRepository;
 @RequestMapping("/resources/contacts")
 public class ContactMappingController {
 
-    @Autowired
-    private ContactMappingRepository contactMappingRepository;
+	@Autowired
+	private ContactMappingRepository contactMappingRepository;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ContactMapping create(@RequestBody ContactMapping contact, HttpServletResponse response){
+	@RequestMapping(method = RequestMethod.POST)
+	public ContactMapping create(@RequestBody ContactMapping contact,
+			HttpServletResponse response) {
 
-        contactMappingRepository.save(contact);
+		contactMappingRepository.save(contact);
 
-        response.setStatus(HttpServletResponse.SC_CREATED);
+		response.setStatus(HttpServletResponse.SC_CREATED);
 
-        return contact;
-    }
+		return contact;
+	}
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<ContactMapping> retrieveContacts(@RequestParam(value="userId", required = false) String userId){
+	@RequestMapping(method = RequestMethod.GET)
+	public List<ContactMapping> retrieveContacts(
+			@RequestParam(value = "userId", required = false) String userId) {
 
-        List<ContactMapping> contacts = new ArrayList<ContactMapping>();
+		List<ContactMapping> contacts = new ArrayList<ContactMapping>();
 
-        if(userId != null){
-            contacts = contactMappingRepository.findByUserId(userId);
-        }else{
-            for(ContactMapping c : contactMappingRepository.findAll()){
-                contacts.add(c);
-            }
-        }
+		if (userId != null) {
 
-        return contacts;
-    }
+			contacts = contactMappingRepository.findByUserId(userId);
+		} else {
+
+			for (ContactMapping c : contactMappingRepository.findAll()) {
+				contacts.add(c);
+			}
+		}
+
+		return contacts;
+	}
 
 }

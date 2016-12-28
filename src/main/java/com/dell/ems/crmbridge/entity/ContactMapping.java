@@ -13,7 +13,9 @@ public class ContactMapping {
 	private Integer id;
 
 	private String userId;
+
 	private String userKey;
+
 	private Integer remoteId;
 
 	public Integer getId() {
