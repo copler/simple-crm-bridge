@@ -1,15 +1,11 @@
 package com.dell.ems.crmbridge.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dell.ems.crmbridge.entity.ContactMapping;
@@ -22,34 +18,26 @@ public class ContactMappingController {
 	@Autowired
 	private ContactMappingRepository contactMappingRepository;
 
-	@RequestMapping(method = RequestMethod.POST)
-	public ContactMapping create(@RequestBody ContactMapping contact,
+	@RequestMapping(value = "add", method = RequestMethod.POST)
+	public ContactMapping addMapping(@RequestBody ContactMapping contact,
 			HttpServletResponse response) {
 
 		contactMappingRepository.save(contact);
 
-		response.setStatus(HttpServletResponse.SC_CREATED);
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
 		return contact;
 	}
 
-	@RequestMapping(method = RequestMethod.GET)
-	public List<ContactMapping> retrieveContacts(
-			@RequestParam(value = "userId", required = false) String userId) {
+	@RequestMapping(value = "del", method = RequestMethod.POST)
+	public ContactMapping delMapping(@RequestBody ContactMapping contact,
+			HttpServletResponse response) {
 
-		List<ContactMapping> contacts = new ArrayList<ContactMapping>();
+		contactMappingRepository.delete(contactMappingRepository.findByUserId(contact.getUserId()));
 
-		if (userId != null) {
+		response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
-			contacts = contactMappingRepository.findByUserId(userId);
-		} else {
-
-			for (ContactMapping c : contactMappingRepository.findAll()) {
-				contacts.add(c);
-			}
-		}
-
-		return contacts;
+		return contact;
 	}
 
 }

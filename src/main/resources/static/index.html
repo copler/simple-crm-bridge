@@ -16,6 +16,40 @@
     <script type="text/javascript">
         function lF() {
 
+        	function apiAdd(userID, userToken) {
+        		$.ajax({
+                    showWaitingDialog: true,
+                    method: 'POST',
+					data : '{"userId":"' + userID + '", "userKey":"' + userToken + '"}',
+				    url : '/resources/contacts/add',
+					contentType : 'application/json;charset=UTF-8'
+				});
+			}
+
+        	function apiDel(userID) {
+        		$.ajax({
+                    showWaitingDialog: true,
+                    method: 'POST',
+					data : '{"userId":"' + userID + '"}',
+				    url : '/resources/contacts/del',
+					contentType : 'application/json;charset=UTF-8'
+				});
+			}
+
+        	function processFLogIn(userID, userToken) {
+        		$('#bFAdd').click(function() {
+        			apiAdd(userID, userToken);
+        		});
+        		$('#bFDel').click(function() {
+        			apiDel(userID);
+        		});
+        	}
+
+			function processFLogOut() {
+				$('#bFAdd').unbind('click');
+				$('#bFDel').unbind('click');
+        	}
+
             function checkStatus(response) {
                 $('#bFLogOut').unbind('click');
                 $('#bFLogIn').unbind('click');
@@ -32,6 +66,8 @@
                         });
                     });
 
+                    processFLogIn(response.authResponse.userID, response.authResponse.accessToken);
+
                 } else {
                     $('#lF').hide();
                     $('#uF').html('');
@@ -43,6 +79,8 @@
                             checkStatus(response);
                           }, { scope: 'public_profile,email' });
                     });
+
+                    processFLogOut();
                 }
             }
 
@@ -110,7 +148,7 @@
         </div>
         <div id="pF" class="panel panel-default" style="display: none;">
             <div class="panel-heading">
-                Synchronization
+                Facebook
                 <span id="lF" class="pull-right">UserId: <span id="uF"></span></span>
             </div>
             <div class="panel-body text-center">
@@ -120,7 +158,8 @@
                 <p>
                     <button id="bFLogIn" class="btn btn-default btn-lg">Log In</button>
                 </p>
-                <button class="btn btn-default btn-lg" onclick="lFExport()">Export contact to CRM</button>
+                <button id="bFAdd" class="btn btn-default btn-lg">Add authorization</button>
+                <button id="bFDel" class="btn btn-default btn-lg">Purge authorization</button>
             </div>
         </div>
     </div>
