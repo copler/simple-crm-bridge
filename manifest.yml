@@ -1,0 +1,14 @@
+---
+
+applications:
+
+- name: simple-crm-bridge
+  memory: 512M
+  buildpack: java_buildpack
+  path: target\crm-bridge-1.jar
+  instances: 1
+  random-route: false
+  route: simple-crm-bridge
+  host: simple-crm-bridge
+  env:
+    SPRING_PROFILES_ACTIVE: pcf
